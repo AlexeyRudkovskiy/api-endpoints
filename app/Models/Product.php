@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Price;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,14 @@ class Product extends Model
         'title', 'description', 'price', 'price_discount', 'quantity', 'category_id'
     ];
 
+    protected function casts()
+    {
+        return [
+            'price' => Price::class,
+            'price_discount' => Price::class,
+        ];
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -37,6 +46,23 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function getCategoryPath()
+    {
+        $categories = collect([]);
+
+        if ($this->category_id === null) {
+            return $categories;
+        }
+
+        $currentCategory = $this->category;
+        while ($currentCategory !== null) {
+            $categories->push($currentCategory);
+            $currentCategory = $currentCategory->parent()->first();
+        }
+
+        return $categories;
     }
 
 }
