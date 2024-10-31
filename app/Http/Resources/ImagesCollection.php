@@ -19,7 +19,7 @@ class ImagesCollection extends JsonResource
     {
         return [
             'position' => $this->position,
-            'src' => $this->filename
+            'src' => url('/storage/uploads/' . $this->filename)
         ];
     }
 }

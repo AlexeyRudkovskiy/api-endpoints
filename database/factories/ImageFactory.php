@@ -16,8 +16,16 @@ class ImageFactory extends Factory
      */
     public function definition(): array
     {
+        $dateSegments = ["20231031", "20241101", "20241225", "20250101", "20240615", "20240520"];
+        $types = [ 'photo', 'image', 'poster' ];
+        $device = [ 'laptop', 'phone', 'tablet', 'desktop' ];
+
         return [
-            'filename' => $this->faker->filePath()
+            'filename' => implode('-', [
+                $this->faker->randomElement($device),
+                $this->faker->randomElement($types),
+                $this->faker->randomElement($dateSegments),
+            ]) . '.' . $this->faker->randomElement([ 'jpg', 'png', 'webp' ])
         ];
     }
 }
